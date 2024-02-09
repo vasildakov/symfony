@@ -19,8 +19,8 @@
             <generator strategy="AUTO" />
         </id>
 
-        <field name="name" column="name" type="string" length="50" nullable="true" unique="true" />
-        <field name="email" column="email" type="string" column-definition="CHAR(32) NOT NULL" />
+        <field name="name" column="name" type="string" length="50" nullable="true" unique="false" />
+        <field name="email" column="email" type="string" length="150" nullable="false" unique="true" />
     </entity>
 
 </doctrine-mapping>

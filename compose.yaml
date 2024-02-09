@@ -2,13 +2,26 @@ version: '3'
 
 services:
   web:
+    #build:
+    #  context: ./docker/nginx
     image: nginx:latest
+    environment:
+      - CONN_STR=mongodb://user:pass@mongodb
+      - REDIS_URL=redis://cache
     ports:
       - "8080:80"
+      - "444:443"
     working_dir: /code
     volumes:
       - ./:/code
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/nginx/certs/localhost.pem:/etc/nginx/certs/localhost.pem
+      - ./docker/nginx/certs/localhost-key.pem:/etc/nginx/certs/localhost-key.pem
+    depends_on:
+      - redis
+      - mongodb
+      - postgresql
+
   php:
     build:
       context: ./docker/php
@@ -16,7 +29,21 @@ services:
     volumes:
       - ./:/code
 
-  database:
+  redis:
+    image: redis
+    container_name: redis
+    expose:
+      - "6379"
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    container_name: redisinsight
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./data/redisinsight:/db
+
+  postgresql:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-app}
@@ -29,7 +56,29 @@ services:
       - database_data:/var/lib/postgresql/data:rw
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    environment:
+      - MONGO_INITDB_DATABASE=test
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=pass
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data/db
 
 volumes:
   database_data:

@@ -6,10 +6,16 @@
     "require": {
         "php": ">=8.2",
         "ext-ctype": "*",
+        "ext-intl": "*",
         "ext-iconv": "*",
+        "ext-pgsql": "*",
+        "ext-mongodb": "*",
+        "doctrine/common": "^3.4",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
+        "doctrine/mongodb-odm-bundle": "^5.0",
         "doctrine/orm": "^3.0",
+        "laminas/laminas-diagnostics": "^1.25",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.25",
         "symfony/asset": "7.0.*",
@@ -37,7 +43,6 @@
         "symfony/string": "7.0.*",
         "symfony/translation": "7.0.*",
         "symfony/twig-bundle": "7.0.*",
-        "symfony/ux-turbo": "^2.14",
         "symfony/validator": "7.0.*",
         "symfony/web-link": "7.0.*",
         "symfony/yaml": "7.0.*",
@@ -95,6 +100,8 @@
         }
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.5",
+        "fakerphp/faker": "^1.23",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "7.0.*",
         "symfony/css-selector": "7.0.*",
